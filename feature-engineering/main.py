@@ -1,5 +1,6 @@
 import pandas as pd
 from google.cloud import storage
+import numpy as np
 
 
 def fetch_train_data():
@@ -12,9 +13,53 @@ def fetch_train_data():
 
 
 def feature_data(dataframe):
-    pass
+    extract_title(df) # add a feature
+    #extract_deck(df) # add your feature
+    
+    
+    print(df) # make sure feature is added
 
     return dataframe
+
+
+def extract_title(df: pd.DataFrame):
+    title_list = [
+        'Mrs', 'Mr', 'Master', 'Miss', 'Major', 'Rev', 'Dr', 'Ms', 'Mlle',
+        'Col', 'Capt', 'Mme', 'Countess', 'Don', 'Jonkheer'
+    ]
+    df['Title'] = df['Name'].map(lambda x: substrings_in_string(x, title_list))
+    df['Title'] = df.apply(replace_titles, axis=1)
+
+
+def substrings_in_string(big_string: str, substrings):
+    for substring in substrings:
+        if big_string.find(substring) != -1:
+            return substring
+    print(big_string)
+    return np.nan
+
+
+#replacing all titles with mr, mrs, miss, master
+def replace_titles(x):
+    title = x['Title']
+    if title in ['Don', 'Major', 'Capt', 'Jonkheer', 'Rev', 'Col']:
+        return 'Mr'
+    elif title in ['Countess', 'Mme']:
+        return 'Mrs'
+    elif title in ['Mlle', 'Ms']:
+        return 'Miss'
+    elif title == 'Dr':
+        if x['Sex'] == 'Male':
+            return 'Mr'
+        else:
+            return 'Mrs'
+    else:
+        return title
+
+
+def extract_deck(df):
+    ...
+
 
 
 def download_blob(bucket_name, source_blob_name, destination_file_name):
