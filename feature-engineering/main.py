@@ -13,11 +13,13 @@ def fetch_train_data():
 
 
 def feature_data(dataframe):
-    extract_title(df) # add a feature
-    #extract_deck(df) # add your feature
+    extract_title(df) 
+    extract_deck(df) 
+    extract_family(df)
+    extract_age_class(df)
+    extract_fare_per_person(df)
     
-    
-    print(df) # make sure feature is added
+    print(df) 
 
     return dataframe
 
@@ -58,9 +60,18 @@ def replace_titles(x):
 
 
 def extract_deck(df):
-    ...
+    cabin_list = ['A', 'B', 'C', 'D', 'E', 'F', 'T', 'G', 'Unknown']
+    df['Deck']=df['Cabin'].map(lambda x: substrings_in_string(x, cabin_list))
 
+def extract_family(df):
+    cabin_list = ['A', 'B', 'C', 'D', 'E', 'F', 'T', 'G', 'Unknown']
+    df['Deck']=df['Cabin'].map(lambda x: substrings_in_string(x, cabin_list))
 
+def extract_age_class(df):
+    df['Age*Class']=df['Age']*df['Pclass']
+
+def extract_fare_per_person(df):
+    df['Fare_Per_Person']=df['Fare']/(df['Family_Size']+1)
 
 def download_blob(bucket_name, source_blob_name, destination_file_name):
     """Downloads a blob from the bucket."""
