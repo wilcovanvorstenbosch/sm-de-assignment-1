@@ -9,3 +9,5 @@ RUN pip install -r requirements.txt
 ENV GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/key.json"
 
 CMD [ "python", "main.py" ]
+
+EXPOSE 5000
